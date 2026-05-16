@@ -1,0 +1,60 @@
+{
+  "name": "Utsav Bharat – Discover Indian Festivals",
+  "short_name": "Utsav Bharat",
+  "description": "Explore 1000+ Indian festivals, discover traditions, plan festival trips, and book authentic cultural experiences across 28 states.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FFF8F0",
+  "theme_color": "#FF6B35",
+  "lang": "en-IN",
+  "scope": "/",
+  "categories": ["travel", "lifestyle", "education"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%23FF6B35'/><text y='140' x='96' font-size='120' text-anchor='middle'>🪔</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23FF6B35'/><text y='380' x='256' font-size='320' text-anchor='middle'>🪔</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Festival Calendar",
+      "short_name": "Calendar",
+      "description": "View upcoming Indian festivals",
+      "url": "/?page=calendar",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>📅</text></svg>", "sizes": "96x96" }]
+    },
+    {
+      "name": "Trip Planner",
+      "short_name": "Planner",
+      "description": "Plan your festival trip",
+      "url": "/?page=planner",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>🗺️</text></svg>", "sizes": "96x96" }]
+    },
+    {
+      "name": "Festival Quiz",
+      "short_name": "Quiz",
+      "description": "Test your festival knowledge",
+      "url": "/?page=quiz",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>🎮</text></svg>", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=1280&h=720&q=80",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "label": "Utsav Bharat Home Screen"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
