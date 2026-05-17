@@ -465,8 +465,8 @@ export default function Home({ navigate }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search festivals, states, traditions..."
-                className="w-full pl-12 pr-4 py-3 rounded-2xl border bg-white text-gray-700 outline-none text-sm shadow-sm transition-all duration-200"
-                style={{ borderColor: "rgba(255,107,53,0.2)", focus: { borderColor: "#FF6B35" } }}
+                className="w-full pl-12 pr-4 py-3 rounded-2xl border bg-white text-gray-700 outline-none text-sm shadow-sm transition-all duration-200 focus:border-orange-400"
+                style={{ borderColor: "rgba(255,107,53,0.2)" }}
               />
             </div>
 
