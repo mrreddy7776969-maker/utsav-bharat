@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const STATE_DATA = [
   { id: 'rajasthan', name: 'Rajasthan', festivals: ['Pushkar Camel Fair', 'Teej', 'Gangaur'], color: '#FF6B35', emoji: '🐪' },
@@ -23,76 +23,74 @@ const STATE_DATA = [
   { id: 'karnataka', name: 'Karnataka', festivals: ['Mysore Dasara', 'Bangalore Karaga', 'Hampi Festival'], color: '#673AB7', emoji: '🦅' },
   { id: 'kerala', name: 'Kerala', festivals: ['Onam', 'Thrissur Pooram', 'Vishu'], color: '#2D9B5D', emoji: '🐘' },
   { id: 'tamilnadu', name: 'Tamil Nadu', festivals: ['Pongal', 'Jallikattu', 'Karthigai Deepam'], color: '#E85D04', emoji: '🐂' },
-];
+]
+
+// Accurate SVG paths for India map (simplified state boundaries)
+const INDIA_MAP_PATH = "M 445,185 L 450,195 L 448,210 L 440,225 L 435,235 L 430,250 L 425,270 L 418,280 L 408,285 L 395,290 L 380,288 L 365,285 L 350,290 L 340,300 L 335,315 L 330,325 L 322,332 L 310,338 L 298,342 L 285,345 L 272,348 L 258,350 L 245,352 L 232,355 L 220,358 L 208,360 L 195,362 L 180,363 L 165,362 L 150,358 L 138,352 L 128,345 L 120,338 L 115,330 L 112,320 L 108,308 L 105,295 L 102,282 L 100,268 L 98,255 L 96,242 L 95,228 L 94,215 L 95,202 L 98,190 L 102,178 L 108,168 L 115,158 L 122,150 L 130,142 L 138,135 L 145,128 L 150,120 L 155,112 L 162,105 L 170,98 L 178,92 L 186,86 L 194,80 L 202,75 L 210,70 L 218,65 L 228,60 L 238,55 L 248,52 L 258,48 L 268,45 L 280,42 L 292,40 L 305,38 L 318,38 L 332,40 L 345,45 L 358,52 L 370,60 L 382,70 L 392,82 L 400,95 L 408,110 L 415,125 L 422,140 L 428,155 L 435,170 L 440,180 Z"
 
 const STATE_PATHS = {
-  // More accurate paths (refined coordinates)
-  rajasthan: "M 180 120 Q 220 80 280 85 Q 320 110 310 160 Q 280 200 230 225 Q 190 210 165 160 Z",
-  gujarat: "M 140 190 Q 130 220 145 255 Q 170 270 195 255 Q 200 220 175 195 Z",
-  punjab: "M 210 95 Q 235 85 265 95 Q 270 125 245 145 Q 215 140 200 115 Z",
-  himachal: "M 225 75 Q 245 65 265 80 Q 255 110 230 115 Z",
-  uttarakhand: "M 255 85 Q 280 75 300 95 Q 295 125 265 130 Z",
-  haryana: "M 225 130 Q 255 120 275 135 Q 270 155 240 160 Z",
-  delhi: "M 235 140 Q 245 135 255 145 Q 250 155 235 155 Z",
-  up: "M 260 125 Q 310 115 355 145 Q 360 190 320 220 Q 280 225 255 190 Z",
-  mp: "M 255 190 Q 290 175 340 195 Q 355 245 320 275 Q 270 280 245 240 Z",
-  maharashtra: "M 220 255 Q 255 245 300 255 Q 325 290 310 335 Q 265 350 225 310 Z",
-  goa: "M 205 315 Q 215 305 225 320 Q 220 330 205 325 Z",
-  odisha: "M 335 220 Q 370 205 395 225 Q 390 265 355 280 Q 330 265 325 240 Z",
-  jharkhand: "M 310 195 Q 345 185 370 205 Q 365 235 340 245 Q 315 235 310 210 Z",
-  westbengal: "M 355 185 Q 385 170 410 195 Q 405 230 375 245 Q 355 230 350 200 Z",
-  assam: "M 390 145 Q 420 135 435 160 Q 425 185 395 190 Z",
-  bihar: "M 325 160 Q 355 150 380 165 Q 385 195 355 210 Q 330 200 320 175 Z",
-  chhattisgarh: "M 290 215 Q 325 205 355 225 Q 355 260 325 270 Q 295 260 285 235 Z",
-  andhrapradesh: "M 255 305 Q 290 295 335 315 Q 345 355 310 380 Q 270 375 245 340 Z",
-  telangana: "M 265 265 Q 295 255 330 270 Q 335 305 310 325 Q 280 325 265 295 Z",
-  karnataka: "M 200 290 Q 235 275 275 285 Q 295 315 285 350 Q 245 365 210 340 Z",
-  kerala: "M 235 375 Q 255 365 280 375 Q 285 400 260 410 Q 240 400 235 385 Z",
-  tamilnadu: "M 225 355 Q 255 340 290 350 Q 305 380 290 405 Q 255 415 225 390 Z",
-  // Add more states as needed (J&K, etc.)
-};
+  rajasthan: "M 165,85 L 195,75 L 225,72 L 255,75 L 280,80 L 295,90 L 305,105 L 310,125 L 308,145 L 300,165 L 290,185 L 275,200 L 260,210 L 245,220 L 230,225 L 215,230 L 200,235 L 185,240 L 170,238 L 160,225 L 155,210 L 150,195 L 148,180 L 150,165 L 152,150 L 155,135 L 158,120 L 160,105 Z",
+  gujarat: "M 130,215 L 145,205 L 160,200 L 175,205 L 185,218 L 190,235 L 188,252 L 180,268 L 168,278 L 155,280 L 145,275 L 135,265 L 128,250 L 125,235 L 128,225 Z",
+  punjab: "M 200,115 L 215,108 L 230,105 L 245,110 L 255,120 L 260,132 L 255,145 L 245,155 L 232,160 L 218,162 L 205,158 L 195,148 L 192,135 Z",
+  himachal: "M 218,95 L 230,88 L 242,85 L 252,90 L 258,100 L 255,112 L 245,120 L 232,125 L 220,122 L 215,112 Z",
+  uttarakhand: "M 242,95 L 255,90 L 268,88 L 280,95 L 285,108 L 280,120 L 268,128 L 252,130 L 242,125 L 238,112 Z",
+  haryana: "M 225,128 L 242,122 L 258,120 L 272,125 L 280,135 L 278,148 L 268,158 L 255,162 L 240,160 L 228,152 L 222,140 Z",
+  delhi: "M 228,135 L 238,130 L 248,132 L 252,142 L 248,150 L 238,152 L 230,148 L 226,142 Z",
+  up: "M 268,130 L 285,125 L 305,122 L 325,125 L 340,135 L 348,150 L 350,168 L 345,185 L 335,198 L 320,210 L 305,220 L 288,225 L 272,222 L 260,212 L 252,198 L 255,180 L 260,165 L 265,150 L 268,140 Z",
+  mp: "M 255,195 L 275,188 L 298,185 L 320,188 L 338,198 L 348,212 L 352,230 L 348,248 L 338,262 L 325,272 L 308,280 L 290,285 L 272,282 L 258,272 L 250,258 L 245,242 L 248,225 L 252,210 Z",
+  maharashtra: "M 225,268 L 245,258 L 268,252 L 290,255 L 308,265 L 318,280 L 322,298 L 318,315 L 308,328 L 295,338 L 280,342 L 265,340 L 252,332 L 242,318 L 235,302 L 228,288 L 225,275 Z",
+  goa: "M 198,312 L 208,308 L 218,310 L 222,320 L 218,328 L 208,332 L 198,328 L 195,318 Z",
+  odisha: "M 330,248 L 348,240 L 365,238 L 378,248 L 385,262 L 382,278 L 372,292 L 358,302 L 342,308 L 328,305 L 320,292 L 322,275 L 328,260 Z",
+  jharkhand: "M 318,205 L 335,198 L 352,198 L 365,208 L 370,222 L 365,238 L 350,248 L 335,252 L 320,248 L 312,238 L 310,222 L 312,210 Z",
+  westbengal: "M 352,195 L 368,188 L 385,188 L 398,198 L 402,212 L 398,228 L 385,240 L 370,248 L 355,250 L 342,245 L 335,232 L 340,218 L 348,205 Z",
+  assam: "M 385,148 L 405,142 L 420,148 L 428,160 L 425,175 L 415,185 L 400,190 L 385,188 L 378,175 L 382,162 Z",
+  bihar: "M 338,165 L 355,158 L 372,160 L 385,172 L 388,188 L 382,202 L 368,212 L 352,218 L 338,215 L 330,202 L 328,185 L 332,172 Z",
+  chhattisgarh: "M 295,225 L 315,218 L 335,218 L 352,228 L 358,245 L 352,262 L 338,275 L 320,282 L 302,282 L 288,275 L 280,260 L 282,245 L 288,232 Z",
+  andhrapradesh: "M 248,318 L 268,310 L 290,308 L 312,315 L 328,328 L 335,345 L 330,362 L 318,378 L 302,388 L 285,392 L 268,385 L 255,370 L 248,350 L 252,332 Z",
+  telangana: "M 268,278 L 288,272 L 310,275 L 328,288 L 335,305 L 330,325 L 315,338 L 295,342 L 278,338 L 265,325 L 262,305 L 268,288 Z",
+  karnataka: "M 195,295 L 218,282 L 242,278 L 265,282 L 285,295 L 295,312 L 292,332 L 280,348 L 262,358 L 242,360 L 222,352 L 208,338 L 198,320 L 195,305 Z",
+  kerala: "M 238,385 L 252,375 L 268,372 L 282,382 L 288,398 L 282,412 L 268,418 L 252,415 L 242,405 L 238,392 Z",
+  tamilnadu: "M 225,360 L 242,348 L 262,342 L 282,345 L 298,358 L 305,378 L 298,398 L 282,412 L 262,418 L 242,412 L 228,398 L 220,378 L 222,362 Z",
+}
 
+// State centroid positions for markers
 const STATE_CENTERS = {
-  rajasthan: { cx: 225, cy: 155 },
-  gujarat: { cx: 165, cy: 225 },
-  punjab: { cx: 235, cy: 115 },
-  himachal: { cx: 245, cy: 95 },
-  uttarakhand: { cx: 275, cy: 105 },
-  haryana: { cx: 250, cy: 140 },
-  delhi: { cx: 242, cy: 145 },
-  up: { cx: 305, cy: 170 },
-  mp: { cx: 295, cy: 230 },
-  maharashtra: { cx: 265, cy: 295 },
-  goa: { cx: 212, cy: 318 },
-  odisha: { cx: 360, cy: 245 },
-  jharkhand: { cx: 345, cy: 215 },
-  westbengal: { cx: 380, cy: 205 },
-  assam: { cx: 410, cy: 160 },
-  bihar: { cx: 355, cy: 180 },
-  chhattisgarh: { cx: 315, cy: 245 },
-  andhrapradesh: { cx: 290, cy: 345 },
-  telangana: { cx: 295, cy: 290 },
-  karnataka: { cx: 245, cy: 315 },
-  kerala: { cx: 255, cy: 395 },
-  tamilnadu: { cx: 260, cy: 380 },
-};
+  rajasthan: { cx: 220, cy: 160 },
+  gujarat: { cx: 162, cy: 245 },
+  punjab: { cx: 228, cy: 132 },
+  himachal: { cx: 238, cy: 105 },
+  uttarakhand: { cx: 262, cy: 108 },
+  haryana: { cx: 248, cy: 142 },
+  delhi: { cx: 238, cy: 142 },
+  up: { cx: 308, cy: 178 },
+  mp: { cx: 302, cy: 235 },
+  maharashtra: { cx: 268, cy: 308 },
+  goa: { cx: 208, cy: 318 },
+  odisha: { cx: 352, cy: 275 },
+  jharkhand: { cx: 342, cy: 220 },
+  westbengal: { cx: 375, cy: 218 },
+  assam: { cx: 405, cy: 165 },
+  bihar: { cx: 358, cy: 185 },
+  chhattisgarh: { cx: 318, cy: 252 },
+  andhrapradesh: { cx: 288, cy: 355 },
+  telangana: { cx: 298, cy: 305 },
+  karnataka: { cx: 242, cy: 318 },
+  kerala: { cx: 265, cy: 398 },
+  tamilnadu: { cx: 262, cy: 382 },
+}
 
 const FestivalMap = ({ festivals, setSelectedFestival }) => {
-  const [hoveredState, setHoveredState] = useState(null);
-  const [activeState, setActiveState] = useState(null);
+  const [hoveredState, setHoveredState] = useState(null)
+  const [activeState, setActiveState] = useState(null)
 
   const handleStateClick = (state) => {
-    setActiveState(state);
-    
-    const match = festivals.find(f => 
-      state.festivals.some(sf => 
-        f.name.toLowerCase().includes(sf.toLowerCase().split(' ')[0])
-      ) || 
-      f.state?.toLowerCase().includes(state.name.toLowerCase().split(' ')[0])
-    );
-    
-    if (match) setSelectedFestival(match);
-  };
+    setActiveState(state)
+    const match = festivals.find(f =>
+      state.festivals.some(sf => f.name.toLowerCase().includes(sf.split(' ')[0].toLowerCase())) ||
+      f.state.toLowerCase().includes(state.name.toLowerCase().split(' ')[0])
+    )
+    if (match) setSelectedFestival(match)
+  }
 
   return (
     <section className="py-24 bg-gradient-to-b from-white to-orange-50/60 dark:from-gray-900 dark:to-gray-950 overflow-hidden">
@@ -101,7 +99,7 @@ const FestivalMap = ({ festivals, setSelectedFestival }) => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 text-sm font-semibold mb-5">
             🗺️ Interactive Map
           </div>
-          <h2 className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white mb-4" style={{fontFamily: "'Playfair Display', serif"}}>
             Festivals <span className="gradient-text">By State</span>
           </h2>
           <p className="text-lg text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
@@ -110,67 +108,232 @@ const FestivalMap = ({ festivals, setSelectedFestival }) => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* SVG Map - Improved */}
+          {/* SVG Map */}
           <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border-2 border-blue-100 dark:border-blue-900/30 shadow-2xl p-6">
-              <svg 
-                viewBox="0 0 480 430" 
-                className="w-full max-h-[520px]" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
+            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border-2 border-blue-100 dark:border-blue-900/30 shadow-2xl p-4">
+              <svg viewBox="0 0 460 420" className="w-full max-h-[520px]" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <radialGradient id="oceanGrad" cx="50%" cy="50%" r="60%">
-                    <stop offset="0%" stopColor="#BAE6FD" />
-                    <stop offset="100%" stopColor="#7DD3FC" />
+                  <radialGradient id="oceanGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#BAE6FD"/>
+                    <stop offset="100%" stopColor="#7DD3FC"/>
                   </radialGradient>
-                  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <filter id="glow">
                     <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
+                    <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
                   </filter>
+                  <filter id="stateGlow">
+                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                    <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                  {STATE_DATA.map(s => (
+                    <linearGradient key={s.id} id={`grad-${s.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor={s.color}/>
+                      <stop offset="100%" stopColor={s.color} stopOpacity="0.7"/>
+                    </linearGradient>
+                  ))}
                 </defs>
 
-                {/* Ocean */}
-                <rect width="480" height="430" fill="url(#oceanGrad)" rx="20"/>
+                {/* Ocean background */}
+                <rect width="460" height="420" fill="url(#oceanGrad)" rx="16"/>
 
-                {/* India outline (simplified but cleaner) */}
-                <path 
-                  d="M 150 80 Q 200 50 320 45 Q 420 90 430 180 Q 410 280 350 370 Q 220 400 140 320 Q 100 220 120 120 Z" 
-                  fill="#FEF3C7" 
-                  stroke="#FCD34D" 
-                  strokeWidth="8" 
-                  opacity="0.6"
-                />
+                {/* India map outline */}
+                <path d={INDIA_MAP_PATH} fill="#FEF3C7" stroke="#FCD34D" strokeWidth="2"/>
 
-                {/* Individual States */}
+                {/* State regions */}
                 {STATE_DATA.map(state => {
-                  const path = STATE_PATHS[state.id];
-                  if (!path) return null;
-                  
-                  const isHovered = hoveredState?.id === state.id;
-                  const isActive = activeState?.id === state.id;
-
+                  const path = STATE_PATHS[state.id]
+                  if (!path) return null
+                  const isHovered = hoveredState?.id === state.id
+                  const isActive = activeState?.id === state.id
                   return (
                     <g key={state.id}>
+                      {/* State fill */}
                       <path
                         d={path}
-                        fill={state.color}
-                        stroke={isActive ? "#fff" : "#FCD34D"}
-                        strokeWidth={isActive ? 3 : 1.5}
-                        opacity={isHovered || isActive ? 0.95 : 0.8}
-                        style={{ 
-                          cursor: 'pointer', 
-                          transition: 'all 0.2s ease',
-                          filter: isHovered ? 'url(#glow)' : 'none'
+                        fill={`url(#grad-${state.id})`}
+                        stroke={isActive ? 'white' : '#FCD34D'}
+                        strokeWidth={isActive ? 2.5 : 1}
+                        opacity={isHovered || isActive ? 0.9 : 0.75}
+                        style={{
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          filter: isHovered ? 'url(#stateGlow)' : 'none'
                         }}
                         onClick={() => handleStateClick(state)}
                         onMouseEnter={() => setHoveredState(state)}
                         onMouseLeave={() => setHoveredState(null)}
                       />
+                      {/* Pulse effect for active state */}
+                      {isActive && (
+                        <path
+                          d={path}
+                          fill="none"
+                          stroke={state.color}
+                          strokeWidth="3"
+                          opacity="0.6"
+                          style={{animation: 'pulse-ring 1.5s ease-out infinite'}}
+                        />
+                      )}
                     </g>
-                  );
+                  )
                 })}
 
-                {/* Markers
+                {/* State markers with emojis */}
+                {STATE_DATA.map(state => {
+                  const center = STATE_CENTERS[state.id]
+                  if (!center) return null
+                  const isHovered = hoveredState?.id === state.id
+                  const isActive = activeState?.id === state.id
+                  return (
+                    <g
+                      key={`marker-${state.id}`}
+                      style={{cursor: 'pointer'}}
+                      onClick={() => handleStateClick(state)}
+                      onMouseEnter={() => setHoveredState(state)}
+                      onMouseLeave={() => setHoveredState(null)}
+                    >
+                      <circle
+                        cx={center.cx}
+                        cy={center.cy}
+                        r={isHovered || isActive ? 18 : 14}
+                        fill="white"
+                        stroke={state.color}
+                        strokeWidth={isActive ? 3 : 2}
+                        style={{
+                          transition: 'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+                          filter: isHovered ? 'url(#glow)' : 'none'
+                        }}
+                      />
+                      <text
+                        x={center.cx}
+                        y={center.cy + 1}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize={isHovered || isActive ? 14 : 11}
+                        style={{userSelect: 'none', pointerEvents: 'none'}}
+                      >
+                        {state.emoji}
+                      </text>
+                    </g>
+                  )
+                })}
+
+                {/* Hover tooltip */}
+                {hoveredState && (
+                  <g>
+                    <rect
+                      x={Math.min((STATE_CENTERS[hoveredState.id]?.cx || 200) - 60, 280)}
+                      y={(STATE_CENTERS[hoveredState.id]?.cy || 200) - 55}
+                      width="120"
+                      height="40"
+                      rx="8"
+                      fill="white"
+                      opacity="0.95"
+                      filter="url(#glow)"
+                    />
+                    <text
+                      x={Math.min((STATE_CENTERS[hoveredState.id]?.cx || 200) - 60, 280) + 60}
+                      y={(STATE_CENTERS[hoveredState.id]?.cy || 200) - 38}
+                      textAnchor="middle"
+                      fontSize="9"
+                      fontWeight="700"
+                      fill="#1a1a1a"
+                    >
+                      {hoveredState.name}
+                    </text>
+                    <text
+                      x={Math.min((STATE_CENTERS[hoveredState.id]?.cx || 200) - 60, 280) + 60}
+                      y={(STATE_CENTERS[hoveredState.id]?.cy || 200) - 24}
+                      textAnchor="middle"
+                      fontSize="7"
+                      fill="#666"
+                    >
+                      {hoveredState.festivals[0]}
+                    </text>
+                  </g>
+                )}
+
+                {/* Compass rose */}
+                <g transform="translate(418, 40)">
+                  <circle cx="0" cy="0" r="20" fill="white" opacity="0.9" stroke="#FCD34D" strokeWidth="1.5"/>
+                  <text x="0" y="-8" textAnchor="middle" fontSize="9" fontWeight="700" fill="#FF6B35">N</text>
+                  <text x="0" y="14" textAnchor="middle" fontSize="7" fill="#666">S</text>
+                  <text x="-12" y="4" textAnchor="middle" fontSize="7" fill="#666">W</text>
+                  <text x="12" y="4" textAnchor="middle" fontSize="7" fill="#666">E</text>
+                  <polygon points="0,-6 -3,0 0,6 3,0" fill="#FF6B35"/>
+                  <polygon points="0,6 -3,0 0,-6 3,0" fill="#DDD"/>
+                </g>
+              </svg>
+
+              {/* Map label */}
+              <div className="absolute top-4 left-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-200 shadow-md">
+                🇮🇳 India — {STATE_DATA.length} Regions
+              </div>
+            </div>
+          </div>
+
+          {/* State info panel */}
+          <div className="space-y-4">
+            {activeState ? (
+              <div className="bg-white dark:bg-gray-900 rounded-3xl border-2 shadow-xl overflow-hidden"
+                style={{borderColor: activeState.color + '60'}}>
+                <div className="p-6 text-white" style={{background: `linear-gradient(135deg, ${activeState.color}, ${activeState.color}99)`}}>
+                  <div className="text-4xl mb-2">{activeState.emoji}</div>
+                  <h3 className="text-2xl font-black" style={{fontFamily: "'Playfair Display', serif"}}>{activeState.name}</h3>
+                  <p className="text-white/80 text-sm mt-1">{activeState.festivals.length} major festivals</p>
+                </div>
+                <div className="p-6">
+                  <h4 className="font-bold text-gray-700 dark:text-gray-300 mb-3 text-sm uppercase tracking-wider">Famous Festivals</h4>
+                  <div className="space-y-2">
+                    {activeState.festivals.map((f, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-colors">
+                        <span className="text-xl">🎪</span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm">{f}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => {
+                      const match = festivals.find(fv =>
+                        fv.state.toLowerCase().includes(activeState.name.toLowerCase().split(' ')[0]) ||
+                        activeState.name.toLowerCase().includes(fv.state.toLowerCase().split(' ')[0])
+                      )
+                      if (match) setSelectedFestival(match)
+                    }}
+                    className="mt-4 w-full py-3 rounded-xl font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                    style={{background: `linear-gradient(135deg, ${activeState.color}, ${activeState.color}99)`}}
+                  >
+                    View Festivals →
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6" style={{fontFamily: "'Playfair Display', serif"}}>
+                  Click a state to explore
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {STATE_DATA.map(state => (
+                    <button
+                      key={state.id}
+                      onClick={() => handleStateClick(state)}
+                      className="flex items-center gap-2.5 p-3 rounded-2xl bg-white dark:bg-gray-900 border border-orange-100 dark:border-orange-900/20 hover:border-orange-400 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 text-left"
+                    >
+                      <span className="text-xl flex-shrink-0">{state.emoji}</span>
+                      <div>
+                        <div className="text-sm font-bold text-gray-800 dark:text-gray-200 leading-tight">{state.name}</div>
+                        <div className="text-xs text-gray-400">{state.festivals.length} festivals</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default FestivalMap
