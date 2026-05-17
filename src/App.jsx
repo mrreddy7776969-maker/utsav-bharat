@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -12,6 +12,13 @@ export default function App() {
   const [selectedFestival, setSelectedFestival] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
+  // Check system preference on mount
+  useEffect(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setDarkMode(true);
+    }
+  }, []);
+
   const navigate = (page, data = null) => {
     setCurrentPage(page);
     if (data) setSelectedFestival(data);
@@ -20,14 +27,17 @@ export default function App() {
 
   return (
     <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-[#FFF8F0] dark:bg-gray-950 transition-colors duration-300">
+      <div
+        className="min-h-screen transition-colors duration-300"
+        style={{ background: darkMode ? "#0a0a0f" : "#FFF8F0" }}
+      >
         <Header
           navigate={navigate}
           currentPage={currentPage}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
         />
-        <main>
+        <main className="page-enter">
           {currentPage === "home" && <Home navigate={navigate} />}
           {currentPage === "festival" && (
             <FestivalDetails festival={selectedFestival} navigate={navigate} />
