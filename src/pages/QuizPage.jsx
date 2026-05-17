@@ -1,355 +1,474 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from "react";
+import { quizQuestions } from "../data/festivals";
 
-const QUESTIONS = [
-  {
-    q: 'Which festival is celebrated as the "Festival of Colors" in India?',
-    options: ['Diwali', 'Holi', 'Navratri', 'Pongal'],
-    answer: 1,
-    fact: 'Holi celebrates the arrival of spring and the victory of good over evil. The tradition of playing with colors originated in Mathura-Vrindavan.',
-    state: 'Uttar Pradesh',
-  },
-  {
-    q: 'Durga Puja is the biggest festival of which Indian state?',
-    options: ['Maharashtra', 'Tamil Nadu', 'West Bengal', 'Rajasthan'],
-    answer: 2,
-    fact: 'Kolkata\'s Durga Puja is a UNESCO Intangible Cultural Heritage. The city spends over ₹32,000 crore during the festival season!',
-    state: 'West Bengal',
-  },
-  {
-    q: 'What is the traditional dance performed during Navratri in Gujarat?',
-    options: ['Bharatanatyam', 'Kathak', 'Garba', 'Bihu'],
-    answer: 2,
-    fact: 'Garba is performed around a central oil-lit lamp called the "Garbha Deep," symbolizing the womb of the universe.',
-    state: 'Gujarat',
-  },
-  {
-    q: 'Which harvest festival is celebrated in Tamil Nadu to thank the Sun god?',
-    options: ['Onam', 'Baisakhi', 'Bihu', 'Pongal'],
-    answer: 3,
-    fact: 'Pongal spans 4 days — Bhogi, Thai Pongal, Maattu Pongal, and Kaanum Pongal. The word "Pongal" means "to boil over."',
-    state: 'Tamil Nadu',
-  },
-  {
-    q: 'The Pushkar Camel Fair is held in which state?',
-    options: ['Gujarat', 'Rajasthan', 'Punjab', 'Haryana'],
-    answer: 1,
-    fact: 'The Pushkar Camel Fair is one of the world\'s largest camel fairs, attracting over 200,000 visitors from around the globe.',
-    state: 'Rajasthan',
-  },
-  {
-    q: 'Onam is a harvest festival celebrated primarily in which Indian state?',
-    options: ['Andhra Pradesh', 'Karnataka', 'Kerala', 'Goa'],
-    answer: 2,
-    fact: 'The Onam Sadya (feast) consists of 26+ traditional dishes served on a banana leaf, making it one of India\'s grandest meals.',
-    state: 'Kerala',
-  },
-  {
-    q: 'What does "Diwali" literally mean?',
-    options: ['Festival of Fire', 'Row of Lamps', 'Victory of Light', 'Night of Stars'],
-    answer: 1,
-    fact: 'Diwali (Deepavali) means "Row of Lamps" in Sanskrit. The festival lasts 5 days and is celebrated by Hindus, Jains, Sikhs, and some Buddhists.',
-    state: 'Pan India',
-  },
-  {
-    q: 'The Bihu dance is the traditional dance of which northeastern state?',
-    options: ['Manipur', 'Meghalaya', 'Assam', 'Nagaland'],
-    answer: 2,
-    fact: 'Assam has three Bihus — Rongali (spring), Kongali (autumn), and Bhogali (winter). Bihu was performed by farmers in the fields originally.',
-    state: 'Assam',
-  },
-  {
-    q: 'Which festival marks the birth of Lord Ganesha?',
-    options: ['Ganesh Chaturthi', 'Krishna Janmashtami', 'Navratri', 'Ram Navami'],
-    answer: 0,
-    fact: 'Ganesh Chaturthi was popularized as a public festival by Lokmanya Bal Gangadhar Tilak in 1893 to unite Indians during independence movement.',
-    state: 'Maharashtra',
-  },
-  {
-    q: 'Baisakhi is a major harvest festival for which community?',
-    options: ['Hindus', 'Muslims', 'Sikhs', 'Christians'],
-    answer: 2,
-    fact: 'Baisakhi also marks the founding of the Khalsa Panth by Guru Gobind Singh in 1699 — one of the most significant events in Sikh history.',
-    state: 'Punjab',
-  },
-  {
-    q: 'The famous Rath Yatra (chariot festival) originates from which city?',
-    options: ['Mathura', 'Varanasi', 'Puri', 'Ayodhya'],
-    answer: 2,
-    fact: 'Puri\'s Rath Yatra is the world\'s oldest and biggest chariot festival. The massive chariots are over 45 feet tall and require thousands of devotees to pull.',
-    state: 'Odisha',
-  },
-  {
-    q: 'What is the special dish prepared during Ganesh Chaturthi?',
-    options: ['Ladoo', 'Modak', 'Barfi', 'Halwa'],
-    answer: 1,
-    fact: 'Modak is considered Lord Ganesha\'s favorite food. The steamed rice dumpling filled with coconut and jaggery is offered as bhog (sacred food).',
-    state: 'Maharashtra',
-  },
-  {
-    q: 'The Goa Carnival was introduced by which colonial rulers?',
-    options: ['British', 'French', 'Portuguese', 'Dutch'],
-    answer: 2,
-    fact: 'The Goa Carnival dates back to the 18th century when Portuguese rulers brought this pre-Lent tradition to India. It\'s now a major 4-day street festival.',
-    state: 'Goa',
-  },
-  {
-    q: 'Which flower is traditionally used for the Pookalam (flower carpet) during Onam?',
-    options: ['Marigold', 'Lotus', 'Thumba', 'Rose'],
-    answer: 0,
-    fact: 'The Pookalam (Athapookalam) is laid out during all 10 days of Onam. Intricate designs are made using 8-10 different types of flowers.',
-    state: 'Kerala',
-  },
-  {
-    q: 'The "Kumbh Mela" is held at how many locations in India?',
-    options: ['Two', 'Three', 'Four', 'Six'],
-    answer: 2,
-    fact: 'Kumbh Mela rotates between four cities: Prayagraj, Haridwar, Nashik, and Ujjain. The Prayagraj Kumbh is the world\'s largest religious gathering.',
-    state: 'Uttar Pradesh',
-  },
-]
+const TOTAL = quizQuestions.length;
+const TIME_PER_Q = 20;
 
-const EMOJIS = ['🎉','🎊','🎪','🎭','🏆','⭐','🌟','💫','✨','🎆']
-
-const QuizPage = ({ navigate }) => {
-  const [current, setCurrent] = useState(0)
-  const [selected, setSelected] = useState(null)
-  const [score, setScore] = useState(0)
-  const [finished, setFinished] = useState(false)
-  const [answers, setAnswers] = useState([])
-  const [showFact, setShowFact] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(15)
-  const [timerActive, setTimerActive] = useState(true)
-
-  const q = QUESTIONS[current]
-  const progress = ((current) / QUESTIONS.length) * 100
-
-  useEffect(() => {
-    setTimeLeft(15)
-    setTimerActive(true)
-    setShowFact(false)
-    setSelected(null)
-  }, [current])
-
-  useEffect(() => {
-    if (!timerActive || selected !== null || finished) return
-    if (timeLeft <= 0) {
-      handleSelect(-1)
-      return
-    }
-    const id = setInterval(() => setTimeLeft(t => t - 1), 1000)
-    return () => clearInterval(id)
-  }, [timeLeft, timerActive, selected, finished])
-
-  const handleSelect = (idx) => {
-    if (selected !== null) return
-    setSelected(idx)
-    setTimerActive(false)
-    setShowFact(true)
-    const isCorrect = idx === q.answer
-    if (isCorrect) setScore(s => s + 1)
-    setAnswers(a => [...a, { question: q.q, correct: isCorrect, selected: idx, answer: q.answer }])
-  }
-
-  const handleNext = () => {
-    if (current + 1 >= QUESTIONS.length) {
-      setFinished(true)
-    } else {
-      setCurrent(c => c + 1)
-    }
-  }
-
-  const handleRestart = () => {
-    setCurrent(0); setSelected(null); setScore(0); setFinished(false); setAnswers([]); setShowFact(false)
-  }
-
-  const pct = Math.round((score / QUESTIONS.length) * 100)
-
-  if (finished) {
-    const grade = pct >= 80 ? { label: 'Festival Expert! 🏆', color: 'from-amber-500 to-orange-500', msg: 'Outstanding! You know Indian festivals inside out!' }
-      : pct >= 60 ? { label: 'Culture Enthusiast! ⭐', color: 'from-orange-500 to-rose-500', msg: 'Great job! You have solid knowledge of Indian festivals.' }
-      : pct >= 40 ? { label: 'Culture Learner! 📚', color: 'from-violet-500 to-purple-500', msg: 'Good start! Explore more festivals to increase your score.' }
-      : { label: 'Keep Exploring! 🌱', color: 'from-teal-500 to-cyan-500', msg: 'India\'s festival culture is vast — keep exploring!' }
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-rose-50 dark:from-gray-950 dark:to-gray-900 pt-24 pb-20 flex items-center">
-        <div className="max-w-2xl mx-auto px-4 w-full">
-          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden border border-orange-100 dark:border-orange-900/20">
-            <div className={`bg-gradient-to-r ${grade.color} p-10 text-center text-white`}>
-              <div className="text-7xl mb-4">{EMOJIS[Math.floor(pct / 10)]}</div>
-              <h2 className="text-3xl font-black mb-2" style={{fontFamily: "'Playfair Display', serif"}}>{grade.label}</h2>
-              <p className="text-white/80 text-lg mb-6">{grade.msg}</p>
-              <div className="inline-flex items-center gap-4 bg-white/20 backdrop-blur-sm rounded-2xl px-8 py-4">
-                <div className="text-center">
-                  <div className="text-4xl font-black">{score}</div>
-                  <div className="text-sm text-white/80">Correct</div>
-                </div>
-                <div className="text-white/40 text-2xl">/</div>
-                <div className="text-center">
-                  <div className="text-4xl font-black">{QUESTIONS.length}</div>
-                  <div className="text-sm text-white/80">Total</div>
-                </div>
-                <div className="text-white/40 text-2xl">·</div>
-                <div className="text-center">
-                  <div className="text-4xl font-black">{pct}%</div>
-                  <div className="text-sm text-white/80">Score</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-8">
-              {/* Answer review */}
-              <h3 className="font-black text-gray-900 dark:text-white mb-4 text-lg" style={{fontFamily: "'Playfair Display', serif"}}>Answer Review</h3>
-              <div className="space-y-2 mb-8 max-h-64 overflow-y-auto pr-1">
-                {answers.map((a, i) => (
-                  <div key={i} className={`flex items-start gap-3 p-3 rounded-xl ${a.correct ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'bg-red-50 dark:bg-red-950/20'}`}>
-                    <span className="flex-shrink-0 text-lg">{a.correct ? '✅' : '❌'}</span>
-                    <div>
-                      <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-snug">{QUESTIONS[i].q.slice(0, 60)}...</div>
-                      {!a.correct && a.selected !== -1 && (
-                        <div className="text-xs text-red-500 mt-0.5">Your answer: {QUESTIONS[i].options[a.selected]}</div>
-                      )}
-                      {!a.correct && (
-                        <div className="text-xs text-emerald-600 mt-0.5">Correct: {QUESTIONS[i].options[QUESTIONS[i].answer]}</div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex gap-3">
-                <button onClick={handleRestart} className="flex-1 py-4 rounded-2xl font-bold text-white shadow-lg transition-all hover:-translate-y-0.5"
-                  style={{background: 'linear-gradient(135deg, #FF6B35, #FF006E)'}}>
-                  🔄 Try Again
-                </button>
-                <button onClick={() => navigate('home')} className="flex-1 py-4 rounded-2xl font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
-                  🎪 Explore Festivals
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-rose-50 dark:from-gray-950 dark:to-gray-900 pt-24 pb-20">
-      <div className="max-w-2xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 text-sm font-semibold mb-5">
-            🎮 Cultural Quiz
-          </div>
-          <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-2" style={{fontFamily: "'Playfair Display', serif"}}>
-            Festival <span className="gradient-text">Challenge</span>
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400">Test your knowledge of India's incredible festivals!</p>
-        </div>
-
-        {/* Progress */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-            <div className="h-full rounded-full transition-all duration-500"
-              style={{width: `${progress}%`, background: 'linear-gradient(90deg, #FF6B35, #FF006E)'}}/>
-          </div>
-          <div className="text-sm font-bold text-gray-600 dark:text-gray-400 whitespace-nowrap">
-            {current + 1} / {QUESTIONS.length}
-          </div>
-          <div className="flex items-center gap-1 text-sm font-bold text-emerald-600">
-            ✓ {score}
-          </div>
-        </div>
-
-        {/* Question card */}
-        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-orange-100 dark:border-orange-900/20 overflow-hidden">
-          {/* Timer bar */}
-          <div className="h-1.5 bg-gray-100 dark:bg-gray-800">
-            <div
-              className="h-full transition-all duration-1000 linear"
-              style={{
-                width: `${(timeLeft / 15) * 100}%`,
-                background: timeLeft > 8 ? '#22c55e' : timeLeft > 4 ? '#f59e0b' : '#ef4444'
-              }}
-            />
-          </div>
-
-          <div className="p-7 sm:p-9">
-            {/* Timer + state badge */}
-            <div className="flex items-center justify-between mb-6">
-              <div className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm ${
-                timeLeft > 8 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
-                : timeLeft > 4 ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
-                : 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400'
-              }`}>
-                ⏱ {timeLeft}s
-              </div>
-              <div className="px-3 py-1.5 bg-orange-50 dark:bg-orange-950/30 rounded-xl text-xs font-bold text-orange-600 dark:text-orange-400">
-                📍 {q.state}
-              </div>
-            </div>
-
-            <h2 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white mb-8 leading-snug" style={{fontFamily: "'Playfair Display', serif"}}>
-              {q.q}
-            </h2>
-
-            {/* Options */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-              {q.options.map((opt, i) => {
-                let cls = 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-transparent hover:border-orange-300 hover:-translate-y-0.5'
-                if (selected !== null) {
-                  if (i === q.answer) cls = 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-2 border-emerald-400'
-                  else if (i === selected && selected !== q.answer) cls = 'bg-red-50 dark:bg-red-950/30 text-red-600 border-2 border-red-400'
-                  else cls = 'bg-gray-50 dark:bg-gray-800 text-gray-400 border-2 border-transparent opacity-60'
-                } else if (selected === null) {
-                  cls += ' cursor-pointer'
-                }
-                return (
-                  <button
-                    key={i}
-                    onClick={() => handleSelect(i)}
-                    disabled={selected !== null}
-                    className={`p-4 rounded-2xl font-semibold text-sm text-left transition-all duration-200 ${cls}`}
-                  >
-                    <span className="mr-2 font-black text-orange-500">{['A','B','C','D'][i]}.</span>
-                    {opt}
-                    {selected !== null && i === q.answer && <span className="ml-2">✅</span>}
-                    {selected !== null && i === selected && selected !== q.answer && <span className="ml-2">❌</span>}
-                  </button>
-                )
-              })}
-            </div>
-
-            {/* Fact box */}
-            {showFact && (
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800/30 mb-6">
-                <div className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-300 mb-2">
-                  💡 Did you know?
-                </div>
-                <p className="text-sm text-amber-700 dark:text-amber-400 leading-relaxed">{q.fact}</p>
-              </div>
-            )}
-
-            {/* Next button */}
-            {selected !== null && (
-              <button
-                onClick={handleNext}
-                className="w-full py-4 rounded-2xl font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
-                style={{background: 'linear-gradient(135deg, #FF6B35, #FF006E)'}}
-              >
-                {current + 1 >= QUESTIONS.length ? '🏆 See Results' : 'Next Question →'}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Score bar */}
-        <div className="mt-6 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <span>Score: <strong className="text-orange-600">{score}</strong> / {current + (selected !== null ? 1 : 0)}</span>
-          <button onClick={() => navigate('home')} className="text-orange-500 hover:underline font-medium">Exit Quiz</button>
-        </div>
-      </div>
-    </div>
-  )
+function ConfettiPiece({ style }) {
+  return <div className="absolute w-2 h-3 rounded-sm pointer-events-none" style={style} />;
 }
 
-export default QuizPage
+export default function QuizPage({ navigate }) {
+  const [phase, setPhase] = useState("start"); // start | quiz | result
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [answers, setAnswers] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(TIME_PER_Q);
+  const [showExplain, setShowExplain] = useState(false);
+  const [confetti, setConfetti] = useState([]);
+  const timerRef = useRef(null);
+  const [streak, setStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(0);
+  const [hoveredOption, setHoveredOption] = useState(null);
+
+  // Timer
+  useEffect(() => {
+    if (phase !== "quiz" || selected !== null) return;
+    timerRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          clearInterval(timerRef.current);
+          handleAnswer(-1); // timeout
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [phase, current, selected]);
+
+  const spawnConfetti = () => {
+    const pieces = Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 40}%`,
+      background: ["#FF6B35", "#FF006E", "#FFD700", "#7B2D8B", "#0077B6", "#2D6A4F"][i % 6],
+      animationDuration: `${0.8 + Math.random() * 1.2}s`,
+      animationDelay: `${Math.random() * 0.5}s`,
+      transform: `rotate(${Math.random() * 360}deg)`,
+      animation: `confetti-fall ${0.8 + Math.random() * 1.5}s ease-in forwards`,
+    }));
+    setConfetti(pieces);
+    setTimeout(() => setConfetti([]), 3000);
+  };
+
+  const handleAnswer = (optIdx) => {
+    if (selected !== null) return;
+    clearInterval(timerRef.current);
+    setSelected(optIdx);
+    setShowExplain(true);
+    const q = quizQuestions[current];
+    const isCorrect = optIdx === q.correct;
+    const newAnswers = [...answers, { question: q.id, selected: optIdx, correct: isCorrect, time: TIME_PER_Q - timeLeft }];
+    setAnswers(newAnswers);
+    if (isCorrect) {
+      spawnConfetti();
+      const newStreak = streak + 1;
+      setStreak(newStreak);
+      setMaxStreak((s) => Math.max(s, newStreak));
+    } else {
+      setStreak(0);
+    }
+  };
+
+  const nextQuestion = () => {
+    if (current + 1 >= TOTAL) {
+      setPhase("result");
+      return;
+    }
+    setCurrent((c) => c + 1);
+    setSelected(null);
+    setShowExplain(false);
+    setTimeLeft(TIME_PER_Q);
+    setHoveredOption(null);
+  };
+
+  const restart = () => {
+    setPhase("start");
+    setCurrent(0);
+    setSelected(null);
+    setAnswers([]);
+    setTimeLeft(TIME_PER_Q);
+    setShowExplain(false);
+    setStreak(0);
+    setMaxStreak(0);
+    setHoveredOption(null);
+  };
+
+  const score = answers.filter((a) => a.correct).length;
+  const pct = Math.round((score / TOTAL) * 100);
+
+  const getGrade = () => {
+    if (pct >= 90) return { label: "Festival Guru!", emoji: "🏆", color: "#FFD700", msg: "You're an Indian culture master! Extraordinary knowledge." };
+    if (pct >= 70) return { label: "Culture Champion", emoji: "🥇", color: "#FF6B35", msg: "Impressive! You know India's festivals very well." };
+    if (pct >= 50) return { label: "Festival Explorer", emoji: "🌟", color: "#FF006E", msg: "Good effort! Keep exploring India's rich traditions." };
+    return { label: "Budding Learner", emoji: "📚", color: "#7B2D8B", msg: "Every expert was once a beginner. Keep learning!" };
+  };
+
+  const q = quizQuestions[current];
+  const timerPct = (timeLeft / TIME_PER_Q) * 100;
+  const timerColor = timeLeft > 10 ? "#22c55e" : timeLeft > 5 ? "#f59e0b" : "#ef4444";
+
+  // ===== START SCREEN =====
+  if (phase === "start") {
+    return (
+      <div className="min-h-screen pt-20 pb-20 flex flex-col" style={{ background: "linear-gradient(160deg, #FFF8F0 0%, #FFF0E0 50%, #FFE8D0 100%)" }}>
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="max-w-xl w-full text-center">
+            {/* Floating emojis */}
+            <div className="relative h-32 mb-2 pointer-events-none">
+              {["🪔","🎨","🌺","🐘","💃","🌾","🐪","🦅","🌙"].map((e, i) => (
+                <span
+                  key={i}
+                  className="absolute text-3xl animate-float-up opacity-70"
+                  style={{
+                    left: `${8 + i * 10}%`,
+                    top: `${10 + (i % 3) * 28}%`,
+                    animationDelay: `${i * 0.3}s`,
+                    animationDuration: `${3 + i * 0.4}s`,
+                  }}
+                >
+                  {e}
+                </span>
+              ))}
+            </div>
+
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-bounce-in"
+              style={{ background: "rgba(255,107,53,0.1)", border: "1px solid rgba(255,107,53,0.25)", color: "#FF6B35" }}>
+              🎮 Cultural Knowledge Quiz
+            </div>
+
+            <h1 className="font-display text-5xl md:text-6xl font-black text-gray-900 mb-4 leading-tight">
+              How Well Do You
+              <span className="block" style={{ background: "linear-gradient(135deg, #FF6B35, #FF006E)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                Know India?
+              </span>
+            </h1>
+            <p className="text-gray-500 text-lg mb-8 leading-relaxed">
+              Test your knowledge of India's incredible festival traditions —
+              from ancient Vedic rituals to modern tribal celebrations.
+            </p>
+
+            {/* Stats row */}
+            <div className="grid grid-cols-3 gap-4 mb-10">
+              {[
+                { label: "Questions", value: TOTAL, emoji: "❓" },
+                { label: "Seconds/Q", value: TIME_PER_Q, emoji: "⏱" },
+                { label: "Difficulty", value: "Mixed", emoji: "⚡" },
+              ].map((s, i) => (
+                <div key={i} className="p-4 rounded-2xl bg-white shadow-sm border text-center" style={{ borderColor: "rgba(255,107,53,0.15)" }}>
+                  <div className="text-2xl mb-1">{s.emoji}</div>
+                  <div className="font-black text-xl text-gray-900">{s.value}</div>
+                  <div className="text-xs text-gray-400 font-medium">{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* START BUTTON */}
+            <button
+              onClick={() => setPhase("quiz")}
+              className="group relative w-full py-5 rounded-2xl text-white font-black text-xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-2xl animate-pulse-glow"
+              style={{ background: "linear-gradient(135deg, #FF6B35, #FF006E)" }}
+            >
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                <span className="text-2xl">🚀</span>
+                Start the Quiz!
+                <span className="text-2xl group-hover:translate-x-2 transition-transform duration-300">→</span>
+              </span>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(135deg, #E85D04, #c9005a)" }} />
+            </button>
+
+            <p className="text-xs text-gray-400 mt-4">
+              Each question has {TIME_PER_Q} seconds. No skipping. Let's see what you know! 🇮🇳
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ===== RESULT SCREEN =====
+  if (phase === "result") {
+    const grade = getGrade();
+    return (
+      <div className="min-h-screen pt-20 pb-20 px-4" style={{ background: "linear-gradient(160deg, #FFF8F0 0%, #FFF0E0 50%, #FFE8D0 100%)" }}>
+        <div className="max-w-2xl mx-auto">
+          {/* Grade Card */}
+          <div className="text-center mb-8 animate-bounce-in">
+            <div className="text-8xl mb-4">{grade.emoji}</div>
+            <h1 className="font-display text-4xl font-black text-gray-900 mb-2">{grade.label}</h1>
+            <p className="text-gray-500 text-lg">{grade.msg}</p>
+          </div>
+
+          {/* Score Circle */}
+          <div className="flex justify-center mb-8">
+            <div className="relative w-48 h-48">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth="8" />
+                <circle
+                  cx="60" cy="60" r="54"
+                  fill="none"
+                  stroke="url(#scoreGrad)"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={`${(pct / 100) * 339.3} 339.3`}
+                  className="transition-all duration-1500"
+                  style={{ filter: `drop-shadow(0 0 8px ${grade.color})` }}
+                />
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#FF6B35" />
+                    <stop offset="100%" stopColor="#FF006E" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="font-black text-4xl text-gray-900">{pct}%</span>
+                <span className="text-gray-500 text-sm font-medium">{score}/{TOTAL} correct</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            {[
+              { label: "Correct", value: score, emoji: "✅", color: "#22c55e" },
+              { label: "Wrong", value: TOTAL - score, emoji: "❌", color: "#ef4444" },
+              { label: "Best Streak", value: maxStreak, emoji: "🔥", color: "#FF6B35" },
+            ].map((s, i) => (
+              <div key={i} className="text-center p-5 rounded-2xl bg-white shadow-sm border" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+                <div className="text-2xl mb-1">{s.emoji}</div>
+                <div className="font-black text-2xl" style={{ color: s.color }}>{s.value}</div>
+                <div className="text-xs text-gray-400 font-medium">{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Answer Review */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border mb-8" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+            <h3 className="font-bold text-gray-900 mb-4 text-lg">📋 Question Review</h3>
+            <div className="space-y-3">
+              {quizQuestions.map((q, i) => {
+                const ans = answers[i];
+                if (!ans) return null;
+                return (
+                  <div key={q.id} className="flex items-start gap-3 p-3 rounded-xl" style={{ background: ans.correct ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)" }}>
+                    <span className="text-lg flex-shrink-0">{ans.correct ? "✅" : "❌"}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-800 line-clamp-2">{q.question}</p>
+                      {!ans.correct && (
+                        <p className="text-xs text-green-600 mt-1">
+                          ✓ Correct: {q.options[q.correct]}
+                        </p>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-400 flex-shrink-0 font-medium">{q.difficulty}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={restart}
+              className="flex-1 py-4 rounded-2xl text-white font-bold text-lg transition-all duration-300 hover:scale-105 shadow-xl"
+              style={{ background: "linear-gradient(135deg, #FF6B35, #FF006E)" }}
+            >
+              🔄 Play Again
+            </button>
+            <button
+              onClick={() => navigate("home")}
+              className="flex-1 py-4 rounded-2xl font-bold text-gray-700 text-lg border-2 bg-white hover:bg-gray-50 transition-all duration-300 hover:scale-105"
+              style={{ borderColor: "rgba(255,107,53,0.3)" }}
+            >
+              🏠 Go Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ===== QUIZ SCREEN =====
+  return (
+    <div className="min-h-screen pt-20 pb-20 px-4 relative overflow-hidden" style={{ background: "linear-gradient(160deg, #FFF8F0 0%, #FFF0E0 50%, #FFE8D0 100%)" }}>
+      {/* Confetti */}
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+        {confetti.map((c) => (
+          <ConfettiPiece key={c.id} style={c} />
+        ))}
+      </div>
+
+      <div className="max-w-2xl mx-auto">
+        {/* Progress Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-gray-700 text-sm">Question {current + 1} of {TOTAL}</span>
+              <span className="px-2 py-0.5 rounded-full text-xs font-bold" style={{
+                background: q.difficulty === "Easy" ? "rgba(34,197,94,0.15)" : q.difficulty === "Medium" ? "rgba(245,158,11,0.15)" : "rgba(239,68,68,0.15)",
+                color: q.difficulty === "Easy" ? "#16a34a" : q.difficulty === "Medium" ? "#d97706" : "#dc2626",
+              }}>
+                {q.difficulty}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              {streak >= 2 && (
+                <span className="text-xs font-bold text-orange-500 animate-bounce-in">
+                  🔥 {streak} streak!
+                </span>
+              )}
+              <div
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-sm"
+                style={{ background: `${timerColor}20`, color: timerColor, border: `1.5px solid ${timerColor}40` }}
+              >
+                ⏱ {timeLeft}s
+              </div>
+            </div>
+          </div>
+          {/* Progress bar */}
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+            <div
+              className="h-full rounded-full transition-all duration-300"
+              style={{ width: `${((current) / TOTAL) * 100}%`, background: "linear-gradient(90deg, #FF6B35, #FF006E)" }}
+            />
+          </div>
+          {/* Timer bar */}
+          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-1000 linear"
+              style={{ width: `${timerPct}%`, background: timerColor }}
+            />
+          </div>
+          {/* Score dots */}
+          <div className="flex gap-1.5 mt-2">
+            {quizQuestions.map((_, i) => (
+              <div
+                key={i}
+                className="flex-1 h-1.5 rounded-full transition-all duration-500"
+                style={{
+                  background: i < answers.length
+                    ? answers[i].correct ? "#22c55e" : "#ef4444"
+                    : i === current ? "#FF6B35" : "#e5e7eb",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Question Card */}
+        <div
+          key={current}
+          className="bg-white rounded-3xl p-8 shadow-xl mb-6 animate-reveal-up"
+          style={{ border: "1px solid rgba(255,107,53,0.1)", boxShadow: "0 20px 60px rgba(255,107,53,0.1)" }}
+        >
+          <div className="text-center mb-6">
+            <span className="text-5xl mb-4 inline-block animate-bounce-in">{q.emoji}</span>
+            <h2 className="font-display text-xl md:text-2xl font-bold text-gray-900 leading-tight">
+              {q.question}
+            </h2>
+          </div>
+
+          {/* Options */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {q.options.map((opt, i) => {
+              const isSelected = selected === i;
+              const isCorrect = i === q.correct;
+              const isWrong = isSelected && !isCorrect;
+              const showGreen = selected !== null && isCorrect;
+              const showRed = selected !== null && isWrong;
+              const isHovered = hoveredOption === i && selected === null;
+
+              return (
+                <button
+                  key={i}
+                  onClick={() => handleAnswer(i)}
+                  onMouseEnter={() => setHoveredOption(i)}
+                  onMouseLeave={() => setHoveredOption(null)}
+                  disabled={selected !== null}
+                  className="relative w-full text-left p-4 rounded-2xl font-medium text-sm transition-all duration-300 flex items-center gap-3 group"
+                  style={{
+                    background: showGreen
+                      ? "rgba(34,197,94,0.12)"
+                      : showRed
+                      ? "rgba(239,68,68,0.12)"
+                      : isHovered
+                      ? "rgba(255,107,53,0.08)"
+                      : "rgba(0,0,0,0.03)",
+                    border: showGreen
+                      ? "2px solid #22c55e"
+                      : showRed
+                      ? "2px solid #ef4444"
+                      : isHovered
+                      ? "2px solid rgba(255,107,53,0.4)"
+                      : "2px solid rgba(0,0,0,0.08)",
+                    transform: isHovered && selected === null ? "scale(1.02)" : "scale(1)",
+                    color: showGreen ? "#16a34a" : showRed ? "#dc2626" : "#374151",
+                    cursor: selected !== null ? "default" : "pointer",
+                  }}
+                >
+                  {/* Letter badge */}
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0 transition-all duration-300"
+                    style={{
+                      background: showGreen
+                        ? "#22c55e"
+                        : showRed
+                        ? "#ef4444"
+                        : isHovered
+                        ? "linear-gradient(135deg, #FF6B35, #FF006E)"
+                        : "rgba(0,0,0,0.08)",
+                      color: showGreen || showRed || isHovered ? "white" : "#6b7280",
+                    }}
+                  >
+                    {showGreen ? "✓" : showRed ? "✗" : ["A", "B", "C", "D"][i]}
+                  </div>
+                  <span className="flex-1 leading-tight">{opt}</span>
+                  {showGreen && <span className="text-lg animate-bounce-in">✅</span>}
+                  {showRed && <span className="text-lg animate-bounce-in">❌</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Explanation */}
+        {showExplain && (
+          <div
+            className="rounded-2xl p-5 mb-6 animate-slide-up-fade"
+            style={{
+              background: answers[current]?.correct ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",
+              border: `1.5px solid ${answers[current]?.correct ? "#22c55e40" : "#ef444440"}`,
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">{answers[current]?.correct ? "🎉" : "💡"}</span>
+              <div>
+                <p className="font-bold text-gray-900 mb-1">
+                  {answers[current]?.correct
+                    ? streak > 1 ? `${streak} in a row! 🔥` : "Correct!"
+                    : "Not quite!"}
+                </p>
+                <p className="text-gray-600 text-sm leading-relaxed">{q.explanation}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Next Button */}
+        {selected !== null && (
+          <button
+            onClick={nextQuestion}
+            className="w-full py-4 rounded-2xl text-white font-bold text-lg transition-all duration-300 hover:scale-105 shadow-xl animate-slide-up-fade"
+            style={{ background: "linear-gradient(135deg, #FF6B35, #FF006E)" }}
+          >
+            {current + 1 >= TOTAL ? "🏁 See Results" : "Next Question →"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
