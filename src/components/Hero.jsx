@@ -139,7 +139,7 @@ const Hero = ({ navigate }) => {
               {/* Big image */}
               <div className="relative rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(255,107,53,0.25)] border-2 border-white/60">
                 <img
-                  src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=700&q=80"
+                  src="https://images.unsplash.com/photo-1635192592106-77a5aacbe1a3?q=80&w=1969&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                   alt="Diwali Festival"
                   className="w-full h-[420px] object-cover"
                 />
